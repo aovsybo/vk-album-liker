@@ -1,13 +1,9 @@
-import requests
-
-from api_token import token
-import vk_api
 from time import sleep
+import os
+import vk_api
+from dotenv import load_dotenv
 
-
-def get_photo_ids(start, amount, owner_id, album_id="saved"):
-    session = vk_api.VkApi(token=token)
-
+def get_photo_ids(session, start, amount, owner_id, album_id="saved"):
     params_get_photo = {
         "owner_id": owner_id,
         "album_id": album_id,
@@ -20,9 +16,7 @@ def get_photo_ids(start, amount, owner_id, album_id="saved"):
     return photos["items"]
 
 
-def like_album(owner_id, photo_ids):
-    session = vk_api.VkApi(token=token)
-
+def like_album(session, owner_id, photo_ids):
     params_like = {
         "type": "photo",
         "owner_id": owner_id,
@@ -47,12 +41,16 @@ def like_album(owner_id, photo_ids):
 
 
 def main():
-    lisa_id = 214111638
+    load_dotenv()
+    token = os.getenv("token")
+    session = vk_api.VkApi(token=token)
+
     start_position = 1000
     number_of_photos = 100
+    lisa_id = os.getenv("lisa_id")
 
-    photo_ids = get_photo_ids(start_position, number_of_photos, lisa_id)
-    like_album(lisa_id, photo_ids)
+    photo_ids = get_photo_ids(session, start_position, number_of_photos, lisa_id)
+    like_album(session, lisa_id, photo_ids)
 
 
 if __name__ == '__main__':

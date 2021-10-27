@@ -1,3 +1,3 @@
 /.idea/
 /venv/
-api_token.py
+.env
